@@ -1,7 +1,10 @@
-(ns bowling_game.core
-  (:gen-class))
+(ns bowling_game.core)
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(defn result
+  "return a list of graphical notation of the results of all frames."
+  [scorecard b1 b2]
+  (if (= b1 10)
+    (conj scorecard "X")
+    (if (= (+ b1 b2) 10)
+      (conj scorecard (str b1 "/"))
+      (conj scorecard (str b1 " " b2)))))
