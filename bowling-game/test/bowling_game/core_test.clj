@@ -3,5 +3,20 @@
             [bowling_game.core :refer :all]))
 
 (deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+  (testing "test results. strike"
+    (def b [])
+    (def resultsc (result b 10 0))
+    (is (= resultsc ["X"]))))
+
+(deftest b-test
+  (testing "test results. spare "
+    (def b [])
+    (def resultsc (result b 5 5))
+    (is (= resultsc ["5/"]))))
+
+(deftest c-test
+  (testing "test results. open"
+    (def b [])
+    (def resultsc (result b 5 4))
+    (is (= resultsc ["5 4"]))))
+
