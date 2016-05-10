@@ -20,3 +20,14 @@
     (def resultsc (result b 5 4))
     (is (= resultsc ["5 4"]))))
 
+(deftest d-test
+  (testing "test results. multi frame"
+    (def b [[10 0] [5 5]])
+    (def resultsc (result b 5 4))
+    (is (= resultsc ["X" "5/" "5 4"]))))
+
+(deftest e-test
+  (testing "test results. last frame"
+    (def b [[10 0] [5 5] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0]])
+    (def resultsc (result b 7 3 3))
+    (is (= resultsc ["X" "5/" "X" "X" "X" "X" "X" "X" "X" "7/3"]))))
