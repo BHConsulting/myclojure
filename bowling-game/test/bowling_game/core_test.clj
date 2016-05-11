@@ -31,3 +31,34 @@
     (def b [[10 0] [5 5] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0]])
     (def resultsc (result b 7 3 3))
     (is (= resultsc ["X" "5/" "X" "X" "X" "X" "X" "X" "X" "7/3"]))))
+
+(deftest f-test
+  (testing "frame result -Open"
+    (def b [[7 2]])
+    (def result-frame (scoreFrame b))
+    (is (= result-frame [9]))))
+(deftest g-test
+  (testing "frame result -Spare"
+    (def b [[7 3] [5 0]])
+    (def result-frame (scoreFrame b))
+    (is (= result-frame [15 5]))))
+(deftest h-test
+  (testing "frame result -Strike"
+    (def b [[10] [5 1]])
+    (def result-frame (scoreFrame b))
+    (is (= result-frame [16 6]))))
+(deftest i-test
+  (testing "frame results -OPen"
+    (def b [])
+    (def result-frame (frameScore b 7 2))
+    (is (= result-frame [9]))))
+(deftest j-test
+  (testing "frame results - mixed"
+    (def b [[10] [5 5]])
+    (def result-frame (frameScore b 7 2))
+    (is (= result-frame [20 17 9]))))
+(deftest k-test
+  (testing "frame results - complete"
+    (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4]])
+    (def result-frame (frameScore b 10 10 3))
+    (is (= result-frame [20 17 9 20 30 22 15 5 20 23]))))

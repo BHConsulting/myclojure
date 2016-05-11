@@ -31,7 +31,7 @@
         (str b1 " " b2))))
 
 (defn result
-  "return a list of graphical notation of the results of all frames."
+  "return a vector of graphical notation of the results of all frames."
   ([scorecard b1] (result scorecard b1 0 0))
   ([scorecard b1 b2] (result scorecard b1 b2 0))
   ([scorecard b1 b2 b3]
@@ -43,3 +43,42 @@
   (if (isLastFrame scorecard)
     (conj my-result (result10thFrame b1 b2 b3))
     (conj my-result (resultAFrame b1 b2)))))
+
+(defn bonusStrike "calculate the strike bonus"
+  [SC fIndex]
+  (if (= fIndex 9)
+    (+ ((SC fIndex) 1) ((SC fIndex) 2))
+    (if (isStrike((SC (+ fIndex 1)) 0))
+      (+ 10 ((SC (+ fIndex 2)) 0))
+      (+ ((SC (+ fIndex 1)) 0) ((SC (+ fIndex 1)) 1)))))
+(defn bonusSpare "calculate the spare bonus"
+  [SC fIndex]
+  (if (= fIndex 9)
+    ((SC fIndex) 2)
+    ((SC (+ fIndex 1)) 0)))
+
+(defn scoreAFrame "score a given frame"
+  [SC indexFrame] 
+    (if (isStrike ((SC indexFrame) 0)) (+ 10 (bonusStrike SC indexFrame))
+      (if (isSpare ((SC indexFrame) 0) ((SC indexFrame) 1))
+        (+ 10 (bonusSpare SC indexFrame))
+        (+ ((SC indexFrame) 0) ((SC indexFrame) 1)))))
+
+(defn scoreFrame "score all frame"
+  [SC]
+  (def my-framescore [])
+  (loop [i 0]
+    (when (< i (.length SC))
+      (def my-framescore (conj my-framescore (scoreAFrame SC i)))
+      (recur (inc i))))
+   my-framescore)
+
+(defn frameScore
+  "return a vector of frame scores of all frames."
+  ([scorecard b1] (frameScore scorecard b1 0 0))
+  ([scorecard b1 b2] (frameScore scorecard b1 b2 0))
+  ([scorecard b1 b2 b3]
+  (if (isLastFrame scorecard)
+    (def SC (conj scorecard [b1 b2 b3]))
+    (def SC (conj scorecard [b1 b2])))
+  (scoreFrame SC)))
