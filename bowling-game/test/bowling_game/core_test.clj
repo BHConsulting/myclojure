@@ -31,7 +31,6 @@
     (def b [[10 0] [5 5] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0] [10 0]])
     (def resultsc (result b 7 3 3))
     (is (= resultsc ["X" "5/" "X" "X" "X" "X" "X" "X" "X" "7/3"]))))
-
 (deftest f-test
   (testing "frame result -Open"
     (def b [[7 2]])
@@ -47,6 +46,7 @@
     (def b [[10] [5 1]])
     (def result-frame (scoreFrame b))
     (is (= result-frame [16 6]))))
+
 (deftest i-test
   (testing "frame results -OPen"
     (def b [])
@@ -62,3 +62,18 @@
     (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4]])
     (def result-frame (frameScore b 10 10 3))
     (is (= result-frame [20 17 9 20 30 22 15 5 20 23]))))
+
+(deftest l-test
+  (testing "running total"
+    (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4]])
+    (def result-frame (runningTotal b 7 3 3))
+    (is (= result-frame [20 37 46 66 96 118 133 138 155 168]))))
+
+(deftest m-test
+  (testing "create an empty score card"
+    (is (= (runningTotal (empty-score)) []))))
+
+(deftest n-test
+  (testing "determine whethere a game is complete - if so provide the final score"
+    (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4] [7 3 3]])
+    (is (= (isComplete b) 168))))
