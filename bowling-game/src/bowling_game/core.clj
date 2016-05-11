@@ -6,7 +6,7 @@
 (defn isSpare "return true if spare"
   [b1 b2]
   (= (+ b1 b2) 10))
-(defn isLastFrame "return true if last scorecard has 9 frames"
+(defn is10thFrame "return true if last scorecard has 9 frames"
   [sc]
   (= (.length sc) 9))
 
@@ -34,15 +34,19 @@
   "return a vector of graphical notation of the results of all frames."
   ([scorecard b1] (result scorecard b1 0 0))
   ([scorecard b1 b2] (result scorecard b1 b2 0))
-  ([scorecard b1 b2 b3]
-  (def my-result [])
-  (loop [i 0]
-    (when (< i (.length scorecard))
-        (def my-result (conj my-result (resultAFrame ((scorecard i) 0) ((scorecard i) 1))))	
-      (recur (inc i))))
-  (if (isLastFrame scorecard)
-    (conj my-result (result10thFrame b1 b2 b3))
-    (conj my-result (resultAFrame b1 b2)))))
+  ([scorecard b1 b2 b3] (result scorecard b1 b2 b3 0 []))
+  ([scorecard b1 b2 b3 indexFrame my-result]
+  (if (or (> indexFrame 9) (> indexFrame (.length scorecard)))
+    my-result
+    (if (= indexFrame 9)
+      (conj my-result (result10thFrame b1 b2 b3))
+      (if (= indexFrame (.length scorecard))
+	(conj my-result (resultAFrame b1 b2))
+        (result scorecard b1 b2 b3
+          (+ indexFrame 1)
+	  (conj my-result (resultAFrame
+	    ((scorecard indexFrame) 0)
+	    ((scorecard indexFrame) 1)))))))))
 
 (defn bonusStrike "calculate the strike bonus"
   [SC fIndex]
@@ -57,7 +61,7 @@
     ((SC fIndex) 2)
     ((SC (+ fIndex 1)) 0)))
 
-(defn scoreAFrame "score a given frame"
+(defn scoreAFrame "score a given frame and return the number"
   [SC indexFrame] 
     (if (isStrike ((SC indexFrame) 0)) (+ 10 (bonusStrike SC indexFrame))
       (if (isSpare ((SC indexFrame) 0) ((SC indexFrame) 1))
@@ -65,20 +69,22 @@
         (+ ((SC indexFrame) 0) ((SC indexFrame) 1)))))
 
 (defn scoreFrame "score all frame"
-  [SC]
-  (def my-framescore [])
-  (loop [i 0]
-    (when (< i (.length SC))
-      (def my-framescore (conj my-framescore (scoreAFrame SC i)))
-      (recur (inc i))))
-   my-framescore)
+  ([SC] (scoreFrame SC 0 []))
+  ([SC indexFrame] (scoreFrame SC indexFrame []))
+  ([SC indexFrame my-framescore]
+  (if (or (> indexFrame 9) (> indexFrame (- (.length SC) 1)))
+    my-framescore
+    (scoreFrame
+      SC
+      (+ indexFrame 1)
+      (conj my-framescore (scoreAFrame SC indexFrame))))))
 
 (defn frameScore
   "return a vector of frame scores of all frames."
   ([scorecard b1] (frameScore scorecard b1 0 0))
   ([scorecard b1 b2] (frameScore scorecard b1 b2 0))
   ([scorecard b1 b2 b3]
-  (if (isLastFrame scorecard)
+  (if (is10thFrame scorecard)
     (def SC (conj scorecard [b1 b2 b3]))
     (def SC (conj scorecard [b1 b2])))
-  (scoreFrame SC)))
+  (scoreFrame SC 0)))
