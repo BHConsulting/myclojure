@@ -44,9 +44,12 @@
 	(conj my-result (resultAFrame b1 b2))
         (result scorecard b1 b2 b3
           (+ indexFrame 1)
-	  (conj my-result (resultAFrame
-	    ((scorecard indexFrame) 0)
-	    ((scorecard indexFrame) 1)))))))))
+	  (if (< (.length (scorecard indexFrame)) 2)
+	    (conj my-result (resultAFrame
+	      ((scorecard indexFrame) 0)))
+	    (conj my-result (resultAFrame
+	      ((scorecard indexFrame) 0)
+	      ((scorecard indexFrame) 1))))))))))
 
 (defn bonusStrike "calculate the strike bonus"
   [SC fIndex]
@@ -58,7 +61,9 @@
 (defn bonusSpare "calculate the spare bonus"
   [SC fIndex]
   (if (= fIndex 9)
-    ((SC fIndex) 2)
+    (if (< (.length (SC fIndex)) 3)
+      " "
+      ((SC fIndex) 2))
     ((SC (+ fIndex 1)) 0)))
 
 (defn scoreAFrame "score a given frame and return the number"
@@ -84,11 +89,12 @@
   ([scorecard] (scoreFrame scorecard))
   ([scorecard b1] (frameScore scorecard b1 0 0))
   ([scorecard b1 b2] (frameScore scorecard b1 b2 0))
-  ([scorecard b1 b2 b3]
-  (if (is10thFrame scorecard)
-    (def SC (conj scorecard [b1 b2 b3]))
-    (def SC (conj scorecard [b1 b2])))
-  (scoreFrame SC 0)))
+  ([scorecard b1 b2 b3] 
+    (if (is10thFrame scorecard)
+      (def SC (conj scorecard [b1 b2 b3]))
+      (def SC (conj scorecard [b1 b2])))
+    (scoreFrame SC 0)))
+    
 
 (defn totalFrame "return running total of each frame"
   ([SF] (totalFrame SF 0 []))
@@ -120,11 +126,36 @@
 (defn empty-score "create an empty score card" [] [])
 
 (defn isComplete "return final score or false"
-  [scorecard]
+  ([scorecard]
   (if (< (.length scorecard) 10)
     false
     (if (and (= (.length (scorecard 9)) 2)
              (isSpare ((scorecard 9) 0) ((scorecard 9) 1)))
       false
       (last (runningTotal scorecard)))))
+  ([scorecard b1 b2 b3]
+    (isComplete (conj scorecard [b1 b2 b3])))
+      )
+
+(defn dragons "return dragons from given b1 b2"
+  [b1 b2]
+  (if (isStrike b1)
+    "STRIKE"
+    (if (isSpare b1 b2)
+      "SPARE"
+      "OPEN")))
+      
+(defn f "given a score card, score a frame, returns a map including scores, dragons, results, running total and complete status - throws an exception if input data type does not match "
+  ([scorecard] (totalFrame (frameScore scorecard)))
+  ([scorecard b1] (f scorecard b1 0 0))
+  ([scorecard b1 b2] (f scorecard b1 b2 0))
+  ([scorecard b1 b2 b3]
+    (if (not (= (class scorecard) clojure.lang.PersistentVector))
+      (throw (Exception. "data exception in bowling_pin game!!!")))
+    {:Complete (isComplete scorecard b1 b2 b3)
+     :lastDragons (dragons b1 b2)
+     :runningTotal (runningTotal scorecard b1 b2 b3)
+     :scoreFrame (frameScore scorecard b1 b2 b3)
+     :result (result scorecard b1 b2 b3)
+      }))
     
