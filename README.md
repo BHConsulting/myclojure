@@ -81,7 +81,7 @@ These are the test outcome in the final stage of the API.
     (runningTotal b 7 3 3)
 ;=> [20 37 46 66 96 118 133 138 155 168]
 
-(empty-score) 
+    (empty-score) 
 ;=> []
 
     (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4] [7 3 3]])
@@ -95,9 +95,9 @@ These are the test outcome in the final stage of the API.
     (def b [[10] [7 3] [7 2] [9 1] [10] [10] [10] [2 3] [6 4]])
     (f b 7 3 3) 
 ;=> {:Complete 168 :lastDragons "SPARE"
-     :runningTotal [20 37 46 66 96 118 133 138 155 168]
-     :scoreFrame [20 17 9 20 30 22 15 5 17 13]
-     :result ["X" "7/" "7 2" "9/" "X" "X" "X" "2 3" "6/" "7/3"]}
+ :runningTotal [20 37 46 66 96 118 133 138 155 168]
+ :scoreFrame [20 17 9 20 30 22 15 5 17 13]
+ :result ["X" "7/" "7 2" "9/" "X" "X" "X" "2 3" "6/" "7/3"]}
 
     (def b '(1 2))
     (f b 3)
