@@ -1,7 +1,9 @@
 # myclojure
-Welcoe to my little bowling clojure project
+Welcome to my bowling clojure project!
 
-The data structure for 'scorecard' parameter is expected to have a vector of vectors including the rolls of each frame in the inner vector. For example, [[10] [10 0] [5 5] ... [7 3 3]]. 
+This is currently complete and the following is the overview of the data structure and API.
+
+First of all, the data structure for 'scorecard' parameter is expected to have a vector of vectors including the rolls of each frame in the inner vector. For example, [[10] [10 0] [5 5] ... [7 3 3]]. 
 This was the simplest way of handling the various formats of data in returned results, so it was chosen that way. And it worked out nicely.
 
 These are the core functions to support building a ten-pin bowling scorecard:
