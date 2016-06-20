@@ -1,5 +1,6 @@
 # myclojure
 Welcome to my bowling clojure project!
+This source code reflects an example of currying of functional programming. 
 
 This is currently complete and the following is the overview of the data structure and API.
 
